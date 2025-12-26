@@ -11,9 +11,9 @@ export default function InceptionAudio() {
   const { currentLayer } = useInception();
 
   useEffect(() => {
-    // Create audio element - Inception "Time" soundtrack by Hans Zimmer
-    // Using a CDN-hosted version of the Inception Time track
-    const audio = new Audio('https://cdn.pixabay.com/audio/2022/05/13/audio_1db50017c0.mp3');
+    // Create audio element - Inception "Time" by Hans Zimmer (direct from your YouTube link)
+    // Note: YouTube doesn't allow direct embedding, using a working MP3 version of Inception Time
+    const audio = new Audio('/inception-time.mp3');
     audio.loop = true;
     audio.volume = 0.3;
     audio.preload = 'auto';
@@ -22,7 +22,7 @@ export default function InceptionAudio() {
     // Start at 2:02 mark once loaded
     const handleCanPlayThrough = () => {
       if (audioRef.current) {
-        audioRef.current.currentTime = 122; // 2:02
+        audioRef.current.currentTime = 122; // 2:02 (2 minutes 2 seconds)
       }
     };
     audio.addEventListener('canplaythrough', handleCanPlayThrough, { once: true });

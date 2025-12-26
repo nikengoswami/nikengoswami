@@ -1,108 +1,43 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useInception } from '@/contexts/InceptionContext';
-import { ProjectCard, ProjectModal, ProjectData } from '@/components/ProjectModal';
 import SpinningTotem from '@/components/SpinningTotem';
 
 export default function Layer1Dream() {
   const { goDeeper } = useInception();
-  const [selectedProject, setSelectedProject] = useState<ProjectData | null>(null);
+  const router = useRouter();
 
-  // Full project data with expandable details
-  const projects: ProjectData[] = [
+  // Project preview data with slugs for routing
+  const projects = [
     {
       title: "MMS Point Cloud Classification",
       status: "Active",
       summary: "Hierarchical deep learning system for classifying Mobile Mapping System point clouds with 94.78% accuracy across 1.46M 3D points",
-      details: [
-        "Developed a custom PointNet++ architecture with hierarchical feature learning for 3D point cloud semantic segmentation",
-        "Implemented multi-scale feature aggregation with set abstraction layers for improved spatial understanding",
-        "Optimized CUDA kernels for real-time inference on large-scale point clouds (1.46M points per scene)",
-        "Achieved state-of-the-art accuracy (94.78%) on Mobile Mapping System datasets, outperforming baseline models by 12%",
-        "Built end-to-end pipeline: data preprocessing, augmentation, training, and deployment"
-      ],
-      technologies: ["PyTorch", "PointNet++", "CUDA", "Python", "NumPy", "Open3D", "3D Computer Vision"],
-      achievements: [
-        "94.78% classification accuracy on 8-class semantic segmentation",
-        "Processed 1.46M 3D points with real-time inference capabilities",
-        "12% improvement over traditional point cloud methods",
-        "Published research internship project at NTUST, Taiwan"
-      ],
-      links: [
-        { label: "GitHub Repository", url: "#" },
-        { label: "Research Paper", url: "#" }
-      ]
+      technologies: ["PyTorch", "PointNet++", "CUDA", "3D Vision"],
+      slug: "mms-point-cloud"
     },
     {
       title: "MambaVision Research",
       status: "Research",
       summary: "Enhanced visual feature extraction through 4 model variants, achieving 6% accuracy improvements in computer vision tasks",
-      details: [
-        "Researched and implemented MambaVision architecture variants exploring state-space models for vision tasks",
-        "Developed 4 distinct model configurations with varying computational complexity and performance trade-offs",
-        "Conducted comprehensive ablation studies on attention mechanisms and feature extraction strategies",
-        "Achieved 6% accuracy improvement over baseline vision transformers on ImageNet classification",
-        "Optimized model inference for production deployment while maintaining accuracy gains"
-      ],
-      technologies: ["PyTorch", "Transformers", "Vision AI", "Python", "TensorFlow", "Mamba Architecture", "Computer Vision"],
-      achievements: [
-        "6% accuracy improvement over baseline models",
-        "4 novel architecture variants developed and evaluated",
-        "Published research at NTUST Research Internship, Taiwan",
-        "Contributed to advancing state-space models in computer vision"
-      ],
-      links: [
-        { label: "Research Publication", url: "#" },
-        { label: "Model Checkpoints", url: "#" }
-      ]
+      technologies: ["Transformers", "Vision AI", "Research", "Python"],
+      slug: "mambavision"
     },
     {
       title: "LiDAR Semantic Segmentation",
       status: "Completed",
       summary: "Real-time semantic segmentation of LiDAR point clouds for autonomous systems with optimized inference",
-      details: [
-        "Built a custom U-Net inspired encoder-decoder architecture for 3D LiDAR semantic segmentation",
-        "Integrated with ROS (Robot Operating System) for real-time autonomous navigation applications",
-        "Implemented efficient voxelization and sparse convolution layers for high-speed processing",
-        "Deployed on edge devices with TensorRT optimization for sub-100ms inference latency",
-        "Validated in real-world robotics scenarios including obstacle detection and path planning"
-      ],
-      technologies: ["Deep Learning", "LiDAR", "ROS", "Python", "C++", "TensorRT", "Autonomous Systems"],
-      achievements: [
-        "Real-time inference at 15 FPS on embedded hardware",
-        "Deployed in production robotics applications",
-        "Sub-100ms latency for autonomous navigation",
-        "Robust performance across diverse outdoor environments"
-      ],
-      links: [
-        { label: "Demo Video", url: "#" },
-        { label: "GitHub", url: "#" }
-      ]
+      technologies: ["Deep Learning", "LiDAR", "ROS"],
+      slug: "lidar-segmentation"
     },
     {
       title: "Full-Stack SaaS Platform",
       status: "Production",
       summary: "Enterprise-grade SaaS application with microservices architecture, serving thousands of active users",
-      details: [
-        "Architected and developed a multi-tenant SaaS platform using React, Node.js, and PostgreSQL",
-        "Implemented microservices architecture with Docker containerization and Kubernetes orchestration",
-        "Built CI/CD pipelines with automated testing, deployment, and monitoring",
-        "Achieved 99.9% uptime with load balancing, auto-scaling, and fault-tolerant design",
-        "Served 1000+ active users with sub-second response times and real-time data synchronization"
-      ],
-      technologies: ["React", "Node.js", "PostgreSQL", "Docker", "Kubernetes", "TypeScript", "REST APIs", "Redis"],
-      achievements: [
-        "99.9% system uptime in production",
-        "Serving 1000+ active enterprise users",
-        "Sub-second API response times at scale",
-        "Built at Goodspeed as Software Development Engineer"
-      ],
-      links: [
-        { label: "Live Platform", url: "#" },
-        { label: "Case Study", url: "#" }
-      ]
+      technologies: ["React", "Node.js", "PostgreSQL", "Docker"],
+      slug: "saas-platform"
     }
   ];
 
@@ -199,7 +134,7 @@ export default function Layer1Dream() {
           ))}
         </motion.div>
 
-        {/* Current Projects - Clickable Cards with Modals */}
+        {/* Current Projects - Clickable Cards */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -212,21 +147,48 @@ export default function Layer1Dream() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.7 + index * 0.15, duration: 0.6 }}
+              whileHover={{ scale: 1.02, borderColor: 'rgba(212, 175, 55, 0.4)' }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => router.push(`/projects/${project.slug}`)}
+              className="group bg-stone-900/30 border border-amber-900/20 backdrop-blur-sm p-8 hover:border-amber-700/40 transition-all duration-500 cursor-pointer relative overflow-hidden"
             >
-              <ProjectCard
-                project={project}
-                onClick={() => setSelectedProject(project)}
-              />
+              {/* Hover gradient */}
+              <div className="absolute inset-0 bg-gradient-to-br from-amber-900/0 via-amber-900/5 to-amber-900/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+              <div className="relative z-10">
+                <div className="flex items-start justify-between mb-4">
+                  <h3 className="text-2xl font-light text-stone-200 group-hover:text-amber-600/80 transition-colors" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                    {project.title}
+                  </h3>
+                  <span className="text-xs text-amber-600/70 bg-amber-900/20 px-2 py-1 rounded">
+                    {project.status}
+                  </span>
+                </div>
+
+                <p className="text-stone-500 text-sm mb-4 leading-relaxed">
+                  {project.summary}
+                </p>
+
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {project.technologies.map((tech, i) => (
+                    <span key={i} className="text-xs text-amber-700/60 border border-amber-900/30 px-3 py-1">
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+
+                {/* Click hint */}
+                <motion.p
+                  animate={{ opacity: [0, 1, 0] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="text-xs text-amber-700/40 italic"
+                >
+                  Click to explore →
+                </motion.p>
+              </div>
             </motion.div>
           ))}
         </motion.div>
-
-        {/* Project Modal */}
-        <ProjectModal
-          project={selectedProject}
-          isOpen={selectedProject !== null}
-          onClose={() => setSelectedProject(null)}
-        />
 
         {/* Current Roles */}
         <motion.div

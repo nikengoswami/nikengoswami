@@ -54,9 +54,9 @@ export default function LayerEntry() {
         background: 'radial-gradient(ellipse at center, #0a0a0a 0%, #000000 100%)',
       }}
     >
-      {/* Ultra-cinematic particle field */}
+      {/* Ultra-cinematic particle field - 150 particles */}
       <div className="absolute inset-0">
-        {Array.from({ length: 100 }).map((_, i) => {
+        {Array.from({ length: 150 }).map((_, i) => {
           const size = Math.random() * 3 + 0.5;
           const x = Math.random() * 100;
           const y = Math.random() * 100;

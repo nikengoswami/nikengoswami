@@ -21,13 +21,19 @@ export default function LayerEntry() {
   }, []);
 
   const handleTotemClick = () => {
+    console.log('🎯 TOTEM CLICKED');
+
     // Trigger audio
     if (typeof (window as any).playInceptionAudio === 'function') {
+      console.log('✅ Found playInceptionAudio function, calling it...');
       (window as any).playInceptionAudio();
+    } else {
+      console.error('❌ playInceptionAudio function not found on window');
     }
 
     // Descend after delay
     setTimeout(() => {
+      console.log('⬇️ Descending to next layer...');
       goDeeper();
     }, 1200);
   };

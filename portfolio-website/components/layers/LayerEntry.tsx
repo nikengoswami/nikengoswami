@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, useMotionValue, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { useInception } from '@/contexts/InceptionContext';
 import SpinningTotem from '@/components/SpinningTotem';
@@ -8,9 +8,7 @@ import SpinningTotem from '@/components/SpinningTotem';
 export default function LayerEntry() {
   const { goDeeper } = useInception();
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [hasInteracted, setHasInteracted] = useState(false);
 
-  // Track mouse for parallax effect
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({
@@ -23,17 +21,15 @@ export default function LayerEntry() {
   }, []);
 
   const handleTotemClick = () => {
-    setHasInteracted(true);
-
-    // Trigger audio directly via global function
+    // Trigger audio
     if (typeof (window as any).playInceptionAudio === 'function') {
       (window as any).playInceptionAudio();
     }
 
-    // Small delay before descending for dramatic effect
+    // Descend after delay
     setTimeout(() => {
       goDeeper();
-    }, 800);
+    }, 1200);
   };
 
   return (
@@ -42,27 +38,52 @@ export default function LayerEntry() {
       animate={{ opacity: 1 }}
       exit={{
         opacity: 0,
-        scale: 20,
-        rotateZ: 180,
-        filter: 'blur(100px)'
+        scale: 30,
+        rotateZ: 360,
+        filter: 'blur(150px)'
       }}
       transition={{
-        opacity: { duration: 2 },
-        exit: { duration: 2.5, ease: [0.83, 0, 0.17, 1] }
+        opacity: { duration: 1 },
+        exit: { duration: 3, ease: [0.83, 0, 0.17, 1] }
       }}
-      className="relative min-h-screen overflow-hidden"
+      className="relative min-h-screen overflow-hidden flex items-center justify-center"
       style={{
-        background: 'radial-gradient(ellipse at center, #0a0a0a 0%, #000000 100%)',
+        background: '#000000',
       }}
     >
-      {/* Ultra-cinematic particle field - 150 particles */}
+      {/* Hexagonal grid background */}
+      <div className="absolute inset-0 opacity-10">
+        {Array.from({ length: 30 }).map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute"
+            style={{
+              left: `${(i % 6) * 20}%`,
+              top: `${Math.floor(i / 6) * 20}%`,
+              width: '150px',
+              height: '150px',
+              border: '1px solid #d4af37',
+              clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+            }}
+            animate={{
+              opacity: [0.1, 0.3, 0.1],
+              scale: [1, 1.1, 1],
+            }}
+            transition={{
+              duration: 8 + i * 0.3,
+              repeat: Infinity,
+              delay: i * 0.2,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Quantum particles - minimal, strategic */}
       <div className="absolute inset-0">
-        {Array.from({ length: 150 }).map((_, i) => {
-          const size = Math.random() * 3 + 0.5;
+        {Array.from({ length: 60 }).map((_, i) => {
+          const size = Math.random() * 2 + 1;
           const x = Math.random() * 100;
           const y = Math.random() * 100;
-          const duration = Math.random() * 30 + 20;
-          const delay = Math.random() * 10;
 
           return (
             <motion.div
@@ -73,18 +94,17 @@ export default function LayerEntry() {
                 top: `${y}%`,
                 width: `${size}px`,
                 height: `${size}px`,
-                background: `radial-gradient(circle, ${i % 3 === 0 ? '#d4af37' : i % 3 === 1 ? '#8b7355' : '#c9a961'} 0%, transparent 70%)`,
-                boxShadow: `0 0 ${size * 4}px ${i % 3 === 0 ? '#d4af37' : i % 3 === 1 ? '#8b7355' : '#c9a961'}`,
+                background: '#d4af37',
+                boxShadow: `0 0 ${size * 8}px #d4af37`,
               }}
               animate={{
-                y: [0, -100, 0],
-                x: [0, Math.sin(i) * 50, 0],
-                opacity: [0.1, 0.6, 0.1],
-                scale: [1, 1.5, 1],
+                y: [0, -200, 0],
+                opacity: [0, 0.8, 0],
+                scale: [1, 2, 1],
               }}
               transition={{
-                duration,
-                delay,
+                duration: Math.random() * 15 + 10,
+                delay: Math.random() * 5,
                 repeat: Infinity,
                 ease: 'easeInOut',
               }}
@@ -93,80 +113,100 @@ export default function LayerEntry() {
         })}
       </div>
 
-      {/* Cinematic light rays */}
+      {/* Rotating energy rings */}
       <motion.div
-        className="absolute inset-0 opacity-20"
-        style={{
-          background: `
-            linear-gradient(45deg, transparent 30%, #d4af37 50%, transparent 70%),
-            linear-gradient(-45deg, transparent 30%, #c9a961 50%, transparent 70%)
-          `,
-          mixBlendMode: 'screen',
-        }}
-        animate={{
-          rotate: 360,
-          scale: [1, 1.5, 1],
-        }}
-        transition={{
-          rotate: { duration: 60, repeat: Infinity, ease: 'linear' },
-          scale: { duration: 20, repeat: Infinity, ease: 'easeInOut' },
-        }}
-      />
-
-      {/* Parallax layers */}
-      <motion.div
-        className="absolute inset-0"
-        style={{
-          transform: `translate(${mousePosition.x * 20}px, ${mousePosition.y * 20}px)`,
-        }}
-        transition={{ type: 'spring', stiffness: 50, damping: 20 }}
+        className="absolute inset-0 flex items-center justify-center"
+        animate={{ rotate: 360 }}
+        transition={{ duration: 80, repeat: Infinity, ease: 'linear' }}
       >
-        {Array.from({ length: 5 }).map((_, i) => (
+        {[0, 1, 2, 3].map((i) => (
           <motion.div
             key={i}
-            className="absolute w-full h-full"
+            className="absolute rounded-full"
             style={{
-              transform: `translateZ(${i * 50}px)`,
+              width: `${400 + i * 200}px`,
+              height: `${400 + i * 200}px`,
+              border: `1px solid rgba(212, 175, 55, ${0.15 - i * 0.03})`,
             }}
-          >
-            <div
-              className="absolute rounded-full blur-3xl"
-              style={{
-                width: `${300 + i * 100}px`,
-                height: `${300 + i * 100}px`,
-                background: `radial-gradient(circle, ${['#d4af37', '#c9a961', '#8b7355'][i % 3]}20, transparent)`,
-                left: `${30 + i * 10}%`,
-                top: `${20 + i * 15}%`,
-              }}
-            />
-          </motion.div>
+            animate={{
+              scale: [1, 1.1, 1],
+              opacity: [0.3, 0.6, 0.3],
+            }}
+            transition={{
+              duration: 6 + i * 2,
+              repeat: Infinity,
+              delay: i * 0.5,
+            }}
+          />
         ))}
       </motion.div>
 
-      {/* Main content */}
-      <div className="relative z-20 min-h-screen flex flex-col items-center justify-center px-4">
-        {/* Dramatic title reveal */}
+      {/* Holographic scan lines */}
+      <motion.div
+        className="absolute inset-0"
+        animate={{ y: ['0%', '100%'] }}
+        transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+      >
+        <div
+          className="w-full h-1"
+          style={{
+            background: 'linear-gradient(90deg, transparent, #d4af37, transparent)',
+            boxShadow: '0 0 20px #d4af37',
+          }}
+        />
+      </motion.div>
+
+      {/* PARALLAX DEPTH FIELD */}
+      <motion.div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          transform: `translate(${mousePosition.x * 30}px, ${mousePosition.y * 30}px)`,
+        }}
+        transition={{ type: 'spring', stiffness: 30, damping: 15 }}
+      >
+        {[0, 1, 2].map((i) => (
+          <div
+            key={i}
+            className="absolute rounded-full blur-3xl"
+            style={{
+              width: `${600 + i * 300}px`,
+              height: `${600 + i * 300}px`,
+              background: `radial-gradient(circle, rgba(212, 175, 55, ${0.1 - i * 0.03}), transparent)`,
+              left: `${25 + i * 15}%`,
+              top: `${30 + i * 10}%`,
+            }}
+          />
+        ))}
+      </motion.div>
+
+      {/* MAIN CONTENT - ULTRA MINIMAL */}
+      <div className="relative z-30 flex flex-col items-center justify-center gap-24">
+        {/* NIKEN - HOLOGRAPHIC TEXT */}
         <motion.div
-          initial={{ opacity: 0, y: 100, scale: 0.5 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 2, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center mb-20"
+          initial={{ opacity: 0, y: -100, rotateX: -90 }}
+          animate={{ opacity: 1, y: 0, rotateX: 0 }}
+          transition={{ duration: 2.5, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          className="relative"
+          style={{
+            perspective: '2000px',
+            transformStyle: 'preserve-3d',
+          }}
         >
           <motion.h1
-            className="text-8xl md:text-[12rem] font-extralight tracking-[0.3em] mb-8 relative"
+            className="text-[10rem] md:text-[16rem] font-thin tracking-[0.4em]"
             style={{
               fontFamily: "'Cormorant Garamond', serif",
-              background: 'linear-gradient(180deg, #f4e1a1 0%, #d4af37 50%, #8b7355 100%)',
+              background: 'linear-gradient(180deg, #ffffff 0%, #d4af37 30%, #f4e1a1 60%, #d4af37 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
-              textShadow: '0 0 80px rgba(212, 175, 55, 0.5)',
+              filter: 'drop-shadow(0 0 40px rgba(212, 175, 55, 0.6))',
             }}
             animate={{
               textShadow: [
-                '0 0 80px rgba(212, 175, 55, 0.3)',
-                '0 0 120px rgba(212, 175, 55, 0.6)',
-                '0 0 80px rgba(212, 175, 55, 0.3)',
+                '0 0 60px rgba(212, 175, 55, 0.4)',
+                '0 0 100px rgba(212, 175, 55, 0.8)',
+                '0 0 60px rgba(212, 175, 55, 0.4)',
               ],
             }}
             transition={{ duration: 4, repeat: Infinity }}
@@ -174,129 +214,120 @@ export default function LayerEntry() {
             NIKEN
           </motion.h1>
 
-          {/* Glowing divider */}
+          {/* Laser scan effect across name */}
           <motion.div
-            className="relative w-64 h-1 mx-auto mb-8 overflow-hidden"
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: 1 }}
-            transition={{ duration: 1.5, delay: 1.5 }}
+            className="absolute inset-0 overflow-hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 2 }}
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-600 to-transparent" />
             <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent"
-              animate={{ x: ['-100%', '200%'] }}
-              transition={{ duration: 3, repeat: Infinity, ease: 'linear', delay: 2 }}
+              className="w-full h-1 bg-gradient-to-r from-transparent via-white to-transparent"
+              style={{ boxShadow: '0 0 30px #ffffff' }}
+              animate={{ y: ['0%', '100%'] }}
+              transition={{ duration: 3, repeat: Infinity, ease: 'linear', delay: 3 }}
             />
           </motion.div>
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 1, 0.7] }}
-            transition={{ duration: 3, delay: 2 }}
-            className="text-stone-400 text-sm tracking-[0.5em] uppercase"
-          >
-            Creative Technologist
-          </motion.p>
         </motion.div>
 
-        {/* Ultra-cinematic totem with 3D perspective */}
+        {/* TOTEM - ULTRA ENHANCED */}
         <motion.div
-          initial={{ opacity: 0, scale: 0, rotateY: -180 }}
+          initial={{ opacity: 0, scale: 0, rotateY: 180 }}
           animate={{ opacity: 1, scale: 1, rotateY: 0 }}
           transition={{
-            duration: 2,
-            delay: 2.5,
+            duration: 3,
+            delay: 1.5,
             type: 'spring',
-            stiffness: 50
+            stiffness: 40,
+            damping: 12
           }}
           style={{
-            perspective: '1000px',
+            perspective: '2000px',
             transformStyle: 'preserve-3d',
           }}
         >
-          <motion.div
-            animate={{
-              y: [-20, 20, -20],
-              rotateY: hasInteracted ? 0 : [0, 10, -10, 0],
-            }}
-            transition={{
-              y: { duration: 4, repeat: Infinity, ease: 'easeInOut' },
-              rotateY: { duration: 6, repeat: Infinity, ease: 'easeInOut' },
-            }}
-            style={{
-              transformStyle: 'preserve-3d',
-            }}
-          >
-            <div className="relative">
-              {/* Glow rings */}
-              {[0, 1, 2].map((i) => (
-                <motion.div
-                  key={i}
-                  className="absolute inset-0 rounded-full"
-                  style={{
-                    border: '2px solid rgba(212, 175, 55, 0.2)',
-                    transform: `scale(${1 + i * 0.5})`,
-                  }}
-                  animate={{
-                    opacity: [0.2, 0.8, 0.2],
-                    scale: [1 + i * 0.5, 1.5 + i * 0.5, 1 + i * 0.5],
-                  }}
-                  transition={{
-                    duration: 3,
-                    delay: i * 0.3,
-                    repeat: Infinity,
-                    ease: 'easeInOut',
-                  }}
-                />
-              ))}
+          {/* Energy field around totem */}
+          <div className="relative">
+            {/* Pulsing energy rings */}
+            {[0, 1, 2, 3, 4].map((i) => (
+              <motion.div
+                key={i}
+                className="absolute inset-0 rounded-full pointer-events-none"
+                style={{
+                  border: `2px solid rgba(212, 175, 55, ${0.3 - i * 0.05})`,
+                  transform: `scale(${1 + i * 0.6})`,
+                }}
+                animate={{
+                  opacity: [0, 0.8, 0],
+                  scale: [1 + i * 0.6, 2 + i * 0.6, 1 + i * 0.6],
+                }}
+                transition={{
+                  duration: 4,
+                  delay: i * 0.4,
+                  repeat: Infinity,
+                  ease: 'easeOut',
+                }}
+              />
+            ))}
 
+            {/* Orbiting particles */}
+            {[0, 1, 2, 3, 4, 5].map((i) => (
+              <motion.div
+                key={`orbit-${i}`}
+                className="absolute top-1/2 left-1/2 w-3 h-3 rounded-full pointer-events-none"
+                style={{
+                  background: '#d4af37',
+                  boxShadow: '0 0 15px #d4af37',
+                  marginLeft: '-6px',
+                  marginTop: '-6px',
+                }}
+                animate={{
+                  rotate: 360,
+                  x: Math.cos((i * Math.PI * 2) / 6) * 100,
+                  y: Math.sin((i * Math.PI * 2) / 6) * 100,
+                }}
+                transition={{
+                  rotate: { duration: 8, repeat: Infinity, ease: 'linear' },
+                  x: { duration: 8, repeat: Infinity, ease: 'linear' },
+                  y: { duration: 8, repeat: Infinity, ease: 'linear' },
+                }}
+              />
+            ))}
+
+            {/* TOTEM */}
+            <motion.div
+              animate={{
+                y: [-15, 15, -15],
+              }}
+              transition={{
+                duration: 5,
+                repeat: Infinity,
+                ease: 'easeInOut',
+              }}
+              style={{
+                transformStyle: 'preserve-3d',
+                filter: 'drop-shadow(0 0 50px rgba(212, 175, 55, 0.9))',
+              }}
+            >
               <SpinningTotem onClick={handleTotemClick} label="" />
-            </div>
-          </motion.div>
-        </motion.div>
-
-        {/* Epic call to action */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.5, delay: 3.5 }}
-          className="mt-20 text-center"
-        >
-          <motion.p
-            animate={{
-              opacity: [0.5, 1, 0.5],
-              scale: [1, 1.05, 1],
-            }}
-            transition={{ duration: 3, repeat: Infinity }}
-            className="text-2xl md:text-3xl font-light text-amber-600/80 mb-6 tracking-wider"
-            style={{ fontFamily: "'Cormorant Garamond', serif" }}
-          >
-            Enter Niken&apos;s Dream
-          </motion.p>
-
-          <motion.p
-            animate={{ opacity: [0.3, 0.7, 0.3] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="text-stone-600 text-xs tracking-[0.3em] uppercase"
-          >
-            Click the totem to descend
-          </motion.p>
+            </motion.div>
+          </div>
         </motion.div>
       </div>
 
-      {/* Cinematic vignette */}
+      {/* Radial vignette - stronger */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.8) 100%)',
+          background: 'radial-gradient(ellipse at center, transparent 20%, rgba(0,0,0,0.6) 70%, #000000 100%)',
         }}
       />
 
-      {/* Film grain overlay */}
+      {/* Subtle film grain */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-[0.03]"
+        className="absolute inset-0 pointer-events-none opacity-[0.02]"
         style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='6.5' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' /%3E%3C/svg%3E")`,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='5.5' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' /%3E%3C/svg%3E")`,
         }}
       />
     </motion.section>

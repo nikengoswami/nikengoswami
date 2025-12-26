@@ -83,6 +83,7 @@ export default function InceptionAudio() {
         animate={{ opacity: 1 }}
         transition={{ delay: 2 }}
         onClick={() => setIsMuted(!isMuted)}
+        data-audio-toggle
         className="w-12 h-12 rounded-full bg-stone-900/50 border border-amber-700/30 backdrop-blur-md flex items-center justify-center hover:border-amber-600/50 transition-all duration-300 group"
       >
         <AnimatePresence mode="wait">

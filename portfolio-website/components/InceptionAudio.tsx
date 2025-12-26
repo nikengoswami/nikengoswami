@@ -6,61 +6,38 @@ import { useInception } from '@/contexts/InceptionContext';
 
 export default function InceptionAudio() {
   const [isMuted, setIsMuted] = useState(true);
-  const [isLoaded, setIsLoaded] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { currentLayer } = useInception();
 
   useEffect(() => {
-    // Create audio element - Inception "Time" by Hans Zimmer (direct from your YouTube link)
-    // Note: YouTube doesn't allow direct embedding, using a working MP3 version of Inception Time
+    // Create audio element - Hans Zimmer "Time" from Downloads
     const audio = new Audio('/inception-time.mp3');
     audio.loop = true;
-    audio.volume = 0.3;
-    audio.preload = 'auto';
+    audio.volume = 0.4;
     audioRef.current = audio;
 
-    // Start at 2:02 mark once loaded
-    const handleCanPlayThrough = () => {
+    // Expose play function globally for totem to trigger
+    (window as any).playInceptionAudio = () => {
       if (audioRef.current) {
-        audioRef.current.currentTime = 122; // 2:02 (2 minutes 2 seconds)
+        audioRef.current.currentTime = 122; // Start at 2:02
+        audioRef.current.play()
+          .then(() => {
+            setIsMuted(false);
+            console.log('✅ Inception soundtrack playing from 2:02');
+          })
+          .catch((err) => {
+            console.error('❌ Audio play failed:', err);
+          });
       }
     };
-    audio.addEventListener('canplaythrough', handleCanPlayThrough, { once: true });
-
-    const handleCanPlay = () => {
-      setIsLoaded(true);
-    };
-
-    audio.addEventListener('canplaythrough', handleCanPlay);
-    audio.load();
-
-    // Auto-enable on first click
-    const handleFirstInteraction = () => {
-      if (audioRef.current) {
-        audioRef.current.play().then(() => {
-          setIsMuted(false);
-        }).catch((error) => {
-          console.log('Autoplay prevented:', error);
-          // User will need to click the button manually
-        });
-      }
-      document.removeEventListener('click', handleFirstInteraction);
-      document.removeEventListener('touchstart', handleFirstInteraction);
-    };
-
-    document.addEventListener('click', handleFirstInteraction);
-    document.addEventListener('touchstart', handleFirstInteraction);
 
     return () => {
-      document.removeEventListener('click', handleFirstInteraction);
-      document.removeEventListener('touchstart', handleFirstInteraction);
-      audio.removeEventListener('canplaythrough', handleCanPlay);
-      audio.removeEventListener('canplaythrough', handleCanPlayThrough);
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current.src = '';
         audioRef.current = null;
       }
+      delete (window as any).playInceptionAudio;
     };
   }, []);
 
@@ -69,12 +46,23 @@ export default function InceptionAudio() {
       if (isMuted) {
         audioRef.current.pause();
       } else {
-        audioRef.current.play().catch(() => {
-          console.log('Audio playback failed');
+        audioRef.current.play().catch((err) => {
+          console.log('Audio playback issue:', err);
         });
       }
     }
   }, [isMuted]);
+
+  const toggleAudio = () => {
+    if (audioRef.current) {
+      if (isMuted) {
+        audioRef.current.currentTime = 122; // Ensure 2:02 start
+        audioRef.current.play().then(() => setIsMuted(false));
+      } else {
+        setIsMuted(true);
+      }
+    }
+  };
 
   return (
     <div className="fixed bottom-8 left-8 z-50">
@@ -82,7 +70,7 @@ export default function InceptionAudio() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 2 }}
-        onClick={() => setIsMuted(!isMuted)}
+        onClick={toggleAudio}
         data-audio-toggle
         className="w-12 h-12 rounded-full bg-stone-900/50 border border-amber-700/30 backdrop-blur-md flex items-center justify-center hover:border-amber-600/50 transition-all duration-300 group"
       >
@@ -118,7 +106,7 @@ export default function InceptionAudio() {
         </AnimatePresence>
       </motion.button>
 
-      {/* Ambient sound suggestion text */}
+      {/* Hint text */}
       {isMuted && (
         <motion.p
           initial={{ opacity: 0, x: -20 }}

@@ -24,11 +24,12 @@ export default function LayerEntry() {
 
   const handleTotemClick = () => {
     setHasInteracted(true);
-    // Trigger audio play from InceptionAudio component
-    const audioButton = document.querySelector('[data-audio-toggle]') as HTMLButtonElement;
-    if (audioButton) {
-      audioButton.click();
+
+    // Trigger audio directly via global function
+    if (typeof (window as any).playInceptionAudio === 'function') {
+      (window as any).playInceptionAudio();
     }
+
     // Small delay before descending for dramatic effect
     setTimeout(() => {
       goDeeper();

@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C \"c:\\\\Users\\\\niken\\\\portfolio-website\" log --oneline -10)",
+      "Bash(git -C \"c:\\\\Users\\\\niken\\\\portfolio-website\" log --oneline -20)",
+      "Bash(git -C \"c:\\\\Users\\\\niken\\\\portfolio-website\" show --stat HEAD)",
+      "Bash(npm run build:*)",
+      "Bash(npx vercel:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run dev:*)",
+      "Bash(tasklist:*)",
+      "Bash(findstr node:*)",
+      "Bash(if exist .next rmdir /s /q .next)",
+      "Bash(taskkill /F /PID 16144)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(del C:Usersniken.gitindex.lock)",
+      "Bash(git push)"
+    ]
+  }
+}

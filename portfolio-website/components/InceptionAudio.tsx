@@ -37,7 +37,7 @@ export default function InceptionAudio() {
   return (
     <audio
       ref={audioRef}
-      src="/inception-time.mp3?v=2"
+      src="/inception-time.mp3?v=3"
       loop
       preload="auto"
       style={{ display: 'none' }}

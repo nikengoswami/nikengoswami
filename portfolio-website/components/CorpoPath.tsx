@@ -219,7 +219,7 @@ export default function CorpoPath() {
           <div className="border-t border-white/10 pt-8">
             <p className="text-white/40 text-sm leading-relaxed font-light">
               Currently focused on neural network architectures for 3D perception.
-              Master's in AI/ML at TU Darmstadt. Previously built systems at scale.
+              Master&apos;s in AI/ML at TU Darmstadt. Previously built systems at scale.
               Interested in the intersection of deep learning and geometric understanding.
             </p>
           </div>

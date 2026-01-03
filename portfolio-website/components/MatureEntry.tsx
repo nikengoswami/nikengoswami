@@ -203,7 +203,7 @@ export default function MatureEntry({ onSelectPath }: MatureEntryProps) {
           transition={{ duration: 1.5, delay: 1 }}
           className="absolute bottom-8 text-center text-xs tracking-[0.3em] text-white/20 uppercase"
         >
-          TU Darmstadt • Master's in AI/ML
+          TU Darmstadt • Master&apos;s in AI/ML
         </motion.div>
       </motion.div>
     </div>

@@ -110,7 +110,7 @@ export default function NomadPath() {
             transition={{ duration: 1, delay: 0.3 }}
           >
             <div className="mb-6 text-xs tracking-[0.5em] text-blue-300/50 uppercase">
-              The Wanderer's Archive
+              The Wanderer&apos;s Archive
             </div>
 
             <h1 className="text-9xl md:text-[200px] font-black mb-8 tracking-tighter leading-none bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 bg-clip-text text-transparent">
@@ -205,8 +205,8 @@ export default function NomadPath() {
             The Journey Continues
           </h3>
           <p className="text-xl text-white/50 leading-relaxed">
-            This is the part that doesn't fit on a resume. The wandering, the wondering, the long train rides
-            and longer conversations with strangers. The reminder that we're students first, specialists second.
+            This is the part that doesn&apos;t fit on a resume. The wandering, the wondering, the long train rides
+            and longer conversations with strangers. The reminder that we&apos;re students first, specialists second.
           </p>
         </motion.div>
       </div>

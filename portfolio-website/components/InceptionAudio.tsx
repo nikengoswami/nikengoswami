@@ -1,46 +1,55 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { useCyberpunk } from '@/contexts/InceptionContext';
 
-export default function InceptionAudio() {
-  const audioRef = useRef<HTMLAudioElement>(null);
+export default function CyberpunkAudio() {
+  const nomadAudioRef = useRef<HTMLAudioElement>(null);
+  const corpoAudioRef = useRef<HTMLAudioElement>(null);
+  const { audioTrack } = useCyberpunk();
 
   useEffect(() => {
-    // Expose global function
-    (window as any).playInceptionAudio = () => {
-      const audio = audioRef.current;
-      if (!audio) {
-        console.error('❌ Audio element not found');
-        return;
-      }
+    // Stop all audio when track changes
+    if (nomadAudioRef.current) {
+      nomadAudioRef.current.pause();
+      nomadAudioRef.current.currentTime = 0;
+    }
+    if (corpoAudioRef.current) {
+      corpoAudioRef.current.pause();
+      corpoAudioRef.current.currentTime = 0;
+    }
 
-      console.log('🎵 Playing audio...');
-
-      // Set to 2:02
-      audio.currentTime = 122;
-
-      // Play
-      audio.play()
-        .then(() => {
-          console.log('✅ Audio playing from 2:02');
-        })
-        .catch((err) => {
-          console.error('❌ Play failed:', err);
-        });
-    };
-
-    return () => {
-      delete (window as any).playInceptionAudio;
-    };
-  }, []);
+    // Play the selected track
+    if (audioTrack === 'nomad' && nomadAudioRef.current) {
+      nomadAudioRef.current.play().catch((err) => {
+        console.error('❌ Nomad audio playback failed:', err);
+      });
+    } else if (audioTrack === 'corpo' && corpoAudioRef.current) {
+      corpoAudioRef.current.play().catch((err) => {
+        console.error('❌ Corpo audio playback failed:', err);
+      });
+    }
+  }, [audioTrack]);
 
   return (
-    <audio
-      ref={audioRef}
-      src="/inception-time.mp3?v=4"
-      loop
-      preload="auto"
-      style={{ display: 'none' }}
-    />
+    <>
+      {/* Nomad track - Walter Mitty soundtrack */}
+      <audio
+        ref={nomadAudioRef}
+        src="/nomad-soundtrack.mp3"
+        loop
+        preload="auto"
+        style={{ display: 'none' }}
+      />
+
+      {/* Corpo track - Cyberpunk 2077 OST */}
+      <audio
+        ref={corpoAudioRef}
+        src="/corpo-soundtrack.mp3"
+        loop
+        preload="auto"
+        style={{ display: 'none' }}
+      />
+    </>
   );
 }

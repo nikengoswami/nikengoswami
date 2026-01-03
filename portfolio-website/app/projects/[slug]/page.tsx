@@ -3,7 +3,16 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { ProjectData } from '@/components/ProjectModal';
+
+interface ProjectData {
+  title: string;
+  status: string;
+  summary: string;
+  details: string[];
+  technologies: string[];
+  achievements: string[];
+  links: { label: string; url: string }[];
+}
 
 const projectsData: Record<string, ProjectData> = {
   'mms-point-cloud': {
@@ -112,47 +121,66 @@ export default function ProjectPage({ params }: { params: Promise<{ slug: string
 
   if (!project) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <p className="text-stone-500">Project not found</p>
+      <div className="min-h-screen bg-[#0a0014] flex items-center justify-center">
+        <p className="text-white/40 neon-text">PROJECT NOT FOUND</p>
       </div>
     );
   }
 
+  const projectColors: Record<string, string> = {
+    'mms-point-cloud': 'var(--neon-cyan)',
+    'mambavision': 'var(--neon-magenta)',
+    'lidar-segmentation': 'var(--neon-yellow)',
+    'saas-platform': 'var(--neon-green)',
+  };
+
+  const color = projectColors[Object.keys(projectsData).find(key => projectsData[key].title === project.title) || ''] || 'var(--neon-cyan)';
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-stone-900 via-neutral-900 to-zinc-900">
+    <div className="min-h-screen bg-gradient-to-b from-[#0a0014] via-[#1a0033] to-[#0a0014] relative overflow-x-hidden">
+      {/* Cyberpunk grid */}
+      <div className="fixed inset-0 cyber-grid" />
+      <div className="scan-lines fixed inset-0" />
+
       {/* Back button */}
       <div className="fixed top-8 left-8 z-50">
         <motion.button
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           onClick={() => router.back()}
-          className="px-6 py-3 bg-stone-900/50 border border-amber-700/30 text-stone-300 text-sm font-light backdrop-blur-md hover:border-amber-600/50 transition-all duration-300"
+          className="px-6 py-3 border-2 border-[var(--neon-cyan)] text-[var(--neon-cyan)] text-sm font-semibold backdrop-blur-md hover:bg-[var(--neon-cyan)] hover:text-black transition-all duration-300 tracking-wider"
+          style={{ boxShadow: '0 0 20px rgba(0, 240, 255, 0.3)' }}
         >
-          ← Back to Portfolio
+          &lt; BACK TO CORPO
         </motion.button>
       </div>
 
       {/* Content */}
-      <div className="max-w-4xl mx-auto px-4 py-24">
+      <div className="relative z-10 max-w-5xl mx-auto px-6 py-24">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-12"
+          className="mb-16"
         >
-          <div className="flex items-start justify-between mb-6">
+          <div className="flex items-start justify-between mb-8 flex-wrap gap-4">
             <h1
-              className="text-5xl md:text-6xl font-light text-stone-100"
-              style={{ fontFamily: "'Cormorant Garamond', serif" }}
+              className="text-5xl md:text-7xl font-black tracking-wider"
+              style={{ fontFamily: 'Orbitron', color, textShadow: `0 0 30px ${color}` }}
             >
-              {project.title}
+              {project.title.toUpperCase()}
             </h1>
-            <span className="text-xs text-amber-600/70 bg-amber-900/20 px-3 py-1.5 rounded-full">
-              {project.status}
-            </span>
+            <motion.span
+              className="px-4 py-2 border-2 text-sm font-mono font-bold"
+              style={{ borderColor: color, color }}
+              animate={{ opacity: [0.5, 1, 0.5] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              [{project.status.toUpperCase()}]
+            </motion.span>
           </div>
-          <div className="w-32 h-px bg-gradient-to-r from-amber-700/30 via-amber-600/50 to-transparent mb-8" />
-          <p className="text-stone-400 text-xl font-light leading-relaxed">
+          <div className="h-1 bg-gradient-to-r from-transparent via-[var(--neon-cyan)] to-transparent mb-8 opacity-50" />
+          <p className="text-white/80 text-xl md:text-2xl leading-relaxed font-light">
             {project.summary}
           </p>
         </motion.div>
@@ -162,28 +190,27 @@ export default function ProjectPage({ params }: { params: Promise<{ slug: string
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="mb-12"
+          className="mb-16"
         >
-          <h2
-            className="text-3xl font-light text-amber-600/70 mb-6 tracking-wide"
-            style={{ fontFamily: "'Cormorant Garamond', serif" }}
-          >
-            Technical Details
+          <h2 className="text-3xl md:text-4xl font-bold mb-8 gradient-text" style={{ fontFamily: 'Orbitron' }}>
+            TECHNICAL SPECS
           </h2>
-          <ul className="space-y-4">
-            {project.details.map((detail, index) => (
-              <motion.li
-                key={index}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3 + index * 0.1 }}
-                className="flex items-start gap-4 text-stone-500 text-base"
-              >
-                <span className="text-amber-700/60 mt-1.5 text-xl">▸</span>
-                <span className="font-light leading-relaxed">{detail}</span>
-              </motion.li>
-            ))}
-          </ul>
+          <div className="border-2 border-white/10 p-8 backdrop-blur-sm bg-[#0a0014]/50">
+            <ul className="space-y-5">
+              {project.details.map((detail, index) => (
+                <motion.li
+                  key={index}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.3 + index * 0.1 }}
+                  className="flex items-start gap-4 text-white/70 text-base md:text-lg group"
+                >
+                  <span className="text-2xl group-hover:scale-125 transition-transform" style={{ color }}>■</span>
+                  <span className="leading-relaxed">{detail}</span>
+                </motion.li>
+              ))}
+            </ul>
+          </div>
         </motion.div>
 
         {/* Technologies */}
@@ -191,22 +218,24 @@ export default function ProjectPage({ params }: { params: Promise<{ slug: string
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="mb-12"
+          className="mb-16"
         >
-          <h2
-            className="text-3xl font-light text-amber-600/70 mb-6 tracking-wide"
-            style={{ fontFamily: "'Cormorant Garamond', serif" }}
-          >
-            Technologies Used
+          <h2 className="text-3xl md:text-4xl font-bold mb-8 gradient-text" style={{ fontFamily: 'Orbitron' }}>
+            TECH STACK
           </h2>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-4">
             {project.technologies.map((tech, index) => (
               <motion.span
                 key={index}
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.6 + index * 0.05 }}
-                className="text-sm text-amber-700/60 border border-amber-900/30 bg-amber-900/10 px-4 py-2"
+                className="text-sm md:text-base border-2 px-5 py-3 font-semibold tracking-wide hover:scale-110 transition-transform cursor-default"
+                style={{
+                  borderColor: color,
+                  color,
+                  boxShadow: `0 0 15px ${color}40`,
+                }}
               >
                 {tech}
               </motion.span>
@@ -219,13 +248,10 @@ export default function ProjectPage({ params }: { params: Promise<{ slug: string
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7 }}
-          className="mb-12"
+          className="mb-16"
         >
-          <h2
-            className="text-3xl font-light text-amber-600/70 mb-6 tracking-wide"
-            style={{ fontFamily: "'Cormorant Garamond', serif" }}
-          >
-            Key Achievements
+          <h2 className="text-3xl md:text-4xl font-bold mb-8 gradient-text" style={{ fontFamily: 'Orbitron' }}>
+            ACHIEVEMENTS
           </h2>
           <div className="grid md:grid-cols-2 gap-6">
             {project.achievements.map((achievement, index) => (
@@ -234,9 +260,12 @@ export default function ProjectPage({ params }: { params: Promise<{ slug: string
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8 + index * 0.1 }}
-                className="bg-stone-900/30 border border-amber-900/20 p-6"
+                className="border-2 border-white/20 p-6 backdrop-blur-sm bg-[#0a0014]/30 hover:border-[var(--neon-cyan)] transition-all duration-300"
+                style={{
+                  boxShadow: '0 0 20px rgba(0, 240, 255, 0.1)',
+                }}
               >
-                <p className="text-stone-400 text-base font-light leading-relaxed">{achievement}</p>
+                <p className="text-white/80 text-base leading-relaxed">{achievement}</p>
               </motion.div>
             ))}
           </div>
@@ -249,22 +278,24 @@ export default function ProjectPage({ params }: { params: Promise<{ slug: string
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.9 }}
           >
-            <h2
-              className="text-3xl font-light text-amber-600/70 mb-6 tracking-wide"
-              style={{ fontFamily: "'Cormorant Garamond', serif" }}
-            >
-              Links
+            <h2 className="text-3xl md:text-4xl font-bold mb-8 gradient-text" style={{ fontFamily: 'Orbitron' }}>
+              EXTERNAL LINKS
             </h2>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-6">
               {project.links.map((link, index) => (
                 <a
                   key={index}
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-base text-stone-400 hover:text-amber-600/70 border border-stone-700 hover:border-amber-700/40 px-6 py-3 transition-all duration-300"
+                  className="text-base border-2 px-8 py-4 transition-all duration-300 font-semibold tracking-wide hover:scale-105"
+                  style={{
+                    borderColor: color,
+                    color,
+                    boxShadow: `0 0 20px ${color}40`,
+                  }}
                 >
-                  {link.label} →
+                  {link.label.toUpperCase()} &gt;&gt;
                 </a>
               ))}
             </div>

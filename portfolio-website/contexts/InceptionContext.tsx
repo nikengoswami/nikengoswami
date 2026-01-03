@@ -2,67 +2,51 @@
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
-export type DreamLayer = 'entry' | 'reality' | 'dream1' | 'dream2' | 'limbo';
+export type CyberPath = 'entry' | 'nomad' | 'corpo';
 
-interface InceptionContextType {
-  currentLayer: DreamLayer;
-  goDeeper: () => void;
-  kick: () => void;
-  setLayer: (layer: DreamLayer) => void;
+interface CyberpunkContextType {
+  currentPath: CyberPath;
+  setPath: (path: CyberPath) => void;
   isTransitioning: boolean;
+  audioTrack: 'nomad' | 'corpo' | null;
+  setAudioTrack: (track: 'nomad' | 'corpo' | null) => void;
 }
 
-const InceptionContext = createContext<InceptionContextType | undefined>(undefined);
+const CyberpunkContext = createContext<CyberpunkContextType | undefined>(undefined);
 
-export function InceptionProvider({ children }: { children: ReactNode }) {
-  const [currentLayer, setCurrentLayer] = useState<DreamLayer>('entry');
+export function CyberpunkProvider({ children }: { children: ReactNode }) {
+  const [currentPath, setCurrentPath] = useState<CyberPath>('entry');
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [audioTrack, setAudioTrack] = useState<'nomad' | 'corpo' | null>(null);
 
-  const layers: DreamLayer[] = ['entry', 'reality', 'dream1', 'dream2', 'limbo'];
-
-  const goDeeper = () => {
+  const setPath = (path: CyberPath) => {
     if (isTransitioning) return;
+    setIsTransitioning(true);
 
-    const currentIndex = layers.indexOf(currentLayer);
-    if (currentIndex < layers.length - 1) {
-      setIsTransitioning(true);
-      setTimeout(() => {
-        setCurrentLayer(layers[currentIndex + 1]);
-        setIsTransitioning(false);
-      }, 1500); // Transition duration
+    // Set appropriate audio track
+    if (path === 'nomad') {
+      setAudioTrack('nomad');
+    } else if (path === 'corpo') {
+      setAudioTrack('corpo');
     }
-  };
 
-  const kick = () => {
-    if (isTransitioning) return;
-
-    setIsTransitioning(true);
     setTimeout(() => {
-      setCurrentLayer('reality');
+      setCurrentPath(path);
       setIsTransitioning(false);
-    }, 2000); // Kick transition is longer
-  };
-
-  const setLayer = (layer: DreamLayer) => {
-    if (isTransitioning) return;
-    setIsTransitioning(true);
-    setTimeout(() => {
-      setCurrentLayer(layer);
-      setIsTransitioning(false);
-    }, 1500);
+    }, 1200);
   };
 
   return (
-    <InceptionContext.Provider value={{ currentLayer, goDeeper, kick, setLayer, isTransitioning }}>
+    <CyberpunkContext.Provider value={{ currentPath, setPath, isTransitioning, audioTrack, setAudioTrack }}>
       {children}
-    </InceptionContext.Provider>
+    </CyberpunkContext.Provider>
   );
 }
 
-export function useInception() {
-  const context = useContext(InceptionContext);
+export function useCyberpunk() {
+  const context = useContext(CyberpunkContext);
   if (!context) {
-    throw new Error('useInception must be used within InceptionProvider');
+    throw new Error('useCyberpunk must be used within CyberpunkProvider');
   }
   return context;
 }

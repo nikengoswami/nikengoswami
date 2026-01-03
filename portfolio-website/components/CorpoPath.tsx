@@ -1,258 +1,228 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useState, useRef } from 'react';
+import { useCyberpunk } from '@/contexts/InceptionContext';
 
 const projects = [
   {
-    title: "MMS POINT CLOUD",
-    subtitle: "NEURAL NET CLASSIFICATION",
-    slug: "mms-point-cloud",
-    status: "ACTIVE",
-    color: "var(--neon-cyan)",
+    title: "MMS Point Cloud Classification",
+    category: "Neural Networks",
+    year: "2024",
+    tech: ["PyTorch", "PointNet++", "3D CNN"],
+    description: "Deep learning classification system for mobile mapping point clouds. Trained on 2M+ annotated points.",
+    impact: "94.2% accuracy on urban infrastructure detection",
   },
   {
-    title: "MAMBAVISION",
-    subtitle: "VISION TRANSFORMER",
-    slug: "mambavision",
-    status: "DEPLOYED",
-    color: "var(--neon-magenta)",
+    title: "MambaVision Transformer",
+    category: "Computer Vision",
+    year: "2024",
+    tech: ["Vision Transformers", "State Space Models", "CUDA"],
+    description: "Implemented state-of-the-art vision model architecture with selective state space mechanisms.",
+    impact: "15% faster inference than traditional ViT",
   },
   {
-    title: "LIDAR SEGMENTATION",
-    subtitle: "3D POINT ANALYSIS",
-    slug: "lidar-segmentation",
-    status: "PRODUCTION",
-    color: "var(--neon-yellow)",
+    title: "LiDAR Segmentation Pipeline",
+    category: "3D Analysis",
+    year: "2023",
+    tech: ["Open3D", "RangeNet++", "TensorFlow"],
+    description: "Real-time semantic segmentation for autonomous driving applications using range images.",
+    impact: "Processing 100k points/frame at 20Hz",
   },
   {
-    title: "SAAS PLATFORM",
-    subtitle: "FULL-STACK SYSTEM",
-    slug: "saas-platform",
-    status: "LIVE",
-    color: "var(--neon-green)",
+    title: "SaaS Platform Architecture",
+    category: "Full-Stack",
+    year: "2023",
+    tech: ["Next.js", "PostgreSQL", "Redis", "Docker"],
+    description: "Scalable multi-tenant platform with real-time analytics and API gateway.",
+    impact: "Handling 50k+ daily active users",
   },
 ];
 
-const skills = [
-  { name: "NEURAL NETWORKS", level: 95, color: "#00f0ff" },
-  { name: "COMPUTER VISION", level: 92, color: "#ff00ff" },
-  { name: "POINT CLOUD AI", level: 98, color: "#ffff00" },
-  { name: "DEEP LEARNING", level: 94, color: "#39ff14" },
-  { name: "PYTHON/PYTORCH", level: 96, color: "#ff006e" },
-  { name: "NEXT.JS/REACT", level: 90, color: "#00f0ff" },
+const expertise = [
+  { area: "Neural Networks", depth: 95 },
+  { area: "Computer Vision", depth: 92 },
+  { area: "Point Cloud AI", depth: 98 },
+  { area: "Deep Learning", depth: 94 },
+  { area: "Python/PyTorch", depth: 96 },
+  { area: "System Design", depth: 90 },
 ];
 
 export default function CorpoPath() {
-  const router = useRouter();
-  const [hoveredProject, setHoveredProject] = useState<number | null>(null);
+  const { setPath } = useCyberpunk();
+  const [selectedProject, setSelectedProject] = useState<number | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start start', 'end start'],
+  });
+
+  const headerOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
+  const headerY = useTransform(scrollYProgress, [0, 0.2], [0, -50]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#0a0014] via-[#1a0033] to-[#0a0014] relative overflow-x-hidden">
-      {/* Cyberpunk grid background */}
-      <div className="fixed inset-0 cyber-grid" />
-      <div className="scan-lines fixed inset-0" />
+    <div ref={containerRef} className="min-h-screen bg-black text-white relative">
+      {/* Subtle grid background */}
+      <div className="fixed inset-0 opacity-[0.02]" style={{
+        backgroundImage: 'linear-gradient(#ffffff 1px, transparent 1px), linear-gradient(90deg, #ffffff 1px, transparent 1px)',
+        backgroundSize: '100px 100px',
+      }} />
 
-      {/* Animated data streams */}
-      {[...Array(20)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="fixed w-[1px] h-16 bg-gradient-to-b from-transparent via-[var(--neon-cyan)] to-transparent opacity-20"
-          style={{
-            left: `${(i * 5) % 100}%`,
-          }}
-          animate={{
-            y: ['0vh', '100vh'],
-          }}
-          transition={{
-            duration: 4 + Math.random() * 3,
-            repeat: Infinity,
-            delay: Math.random() * 2,
-            ease: 'linear',
-          }}
-        />
-      ))}
+      {/* Back button */}
+      <motion.button
+        onClick={() => setPath('entry')}
+        className="fixed top-8 left-8 z-50 px-5 py-2.5 border border-white/10 hover:border-white/30 bg-black/60 backdrop-blur-md text-white/60 hover:text-white/90 transition-all duration-500 text-sm tracking-wide"
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+        whileHover={{ x: -3 }}
+      >
+        ← BACK
+      </motion.button>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 py-20">
-        {/* Header */}
+      {/* Header Section */}
+      <motion.div
+        style={{ opacity: headerOpacity, y: headerY }}
+        className="relative z-10 px-8 md:px-16 pt-32 pb-24"
+      >
         <motion.div
-          initial={{ opacity: 0, y: -30 }}
+          initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-20"
+          transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
         >
-          <h1 className="text-7xl md:text-9xl font-black neon-text mb-4" style={{ fontFamily: 'Orbitron' }}>
-            CORPO NET
+          <div className="mb-4 text-sm tracking-[0.3em] text-white/30 uppercase">
+            Technical Portfolio
+          </div>
+          <h1 className="text-7xl md:text-8xl font-bold mb-8 tracking-tighter">
+            CORPO
           </h1>
-          <div className="flex items-center justify-center gap-4 text-lg md:text-xl tracking-[0.3em] text-white/60">
-            <span className="w-12 h-[2px] bg-gradient-to-r from-transparent to-[var(--neon-cyan)]" />
-            <span>NIKEN GOSWAMI // AI ENGINEER</span>
-            <span className="w-12 h-[2px] bg-gradient-to-l from-transparent to-[var(--neon-cyan)]" />
-          </div>
+          <p className="text-xl md:text-2xl text-white/50 max-w-3xl font-light leading-relaxed">
+            Neural architectures. Point clouds. Systems that learn from data and scale under pressure.
+          </p>
         </motion.div>
 
-        {/* Bio Section */}
+        {/* Expertise bars */}
         <motion.div
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="mb-20 relative"
-        >
-          <div className="border-2 border-[var(--neon-cyan)] p-8 md:p-12 backdrop-blur-md bg-[#0a0014]/50">
-            <div className="absolute top-0 left-0 w-6 h-6 border-t-4 border-l-4 border-[var(--neon-cyan)]" />
-            <div className="absolute top-0 right-0 w-6 h-6 border-t-4 border-r-4 border-[var(--neon-cyan)]" />
-            <div className="absolute bottom-0 left-0 w-6 h-6 border-b-4 border-l-4 border-[var(--neon-cyan)]" />
-            <div className="absolute bottom-0 right-0 w-6 h-6 border-b-4 border-r-4 border-[var(--neon-cyan)]" />
-
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 gradient-text">SYSTEM PROFILE</h2>
-            <p className="text-lg md:text-xl text-white/80 leading-relaxed font-light">
-              Master&apos;s in Computer Science at <span className="text-[var(--neon-cyan)]">TU Darmstadt</span>.
-              Specialized in <span className="text-[var(--neon-magenta)]">Deep Learning</span>,
-              <span className="text-[var(--neon-yellow)]"> Point Cloud Processing</span>, and
-              <span className="text-[var(--neon-green)]"> 3D Computer Vision</span>.
-              Building next-gen AI systems that transform raw data into actionable intelligence.
-            </p>
-          </div>
-        </motion.div>
-
-        {/* Skills Matrix */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="mb-20"
+          transition={{ duration: 1, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-20 grid md:grid-cols-2 gap-8 max-w-4xl"
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-10 text-center gradient-text">NEURAL CAPABILITIES</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {skills.map((skill, i) => (
-              <motion.div
-                key={skill.name}
-                initial={{ opacity: 0, x: i % 2 === 0 ? -30 : 30 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.5 + i * 0.1 }}
-                className="relative"
-              >
-                <div className="border border-[var(--neon-cyan)]/30 p-6 backdrop-blur-sm bg-[#0a0014]/30 hover:border-[var(--neon-cyan)] transition-all duration-300">
-                  <div className="flex justify-between items-center mb-3">
-                    <span className="text-lg font-semibold tracking-wider" style={{ color: skill.color }}>
-                      {skill.name}
-                    </span>
-                    <span className="text-white/60 font-mono">{skill.level}%</span>
-                  </div>
-                  <div className="h-2 bg-white/10 relative overflow-hidden">
-                    <motion.div
-                      className="h-full absolute left-0 top-0"
-                      style={{
-                        background: `linear-gradient(90deg, ${skill.color}, transparent)`,
-                        boxShadow: `0 0 10px ${skill.color}`,
-                      }}
-                      initial={{ width: 0 }}
-                      animate={{ width: `${skill.level}%` }}
-                      transition={{ duration: 1.5, delay: 0.7 + i * 0.1 }}
-                    />
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+          {expertise.map((skill, i) => (
+            <motion.div
+              key={skill.area}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 + i * 0.1, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <div className="flex justify-between mb-2 text-sm">
+                <span className="text-white/70">{skill.area}</span>
+                <span className="text-white/40 mono">{skill.depth}%</span>
+              </div>
+              <div className="h-[1px] bg-white/10 relative overflow-hidden">
+                <motion.div
+                  className="absolute inset-y-0 left-0 bg-white/30"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${skill.depth}%` }}
+                  transition={{ duration: 1.5, delay: 0.8 + i * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                />
+              </div>
+            </motion.div>
+          ))}
         </motion.div>
+      </motion.div>
 
-        {/* Projects Grid */}
+      {/* Projects Grid */}
+      <div className="relative z-10 px-8 md:px-16 pb-32">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
+          transition={{ duration: 1, delay: 0.7 }}
+          className="mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-10 text-center gradient-text">ACTIVE PROJECTS</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {projects.map((project, i) => (
-              <motion.div
-                key={project.slug}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6, delay: 0.7 + i * 0.1 }}
-                onHoverStart={() => setHoveredProject(i)}
-                onHoverEnd={() => setHoveredProject(null)}
-                onClick={() => router.push(`/projects/${project.slug}`)}
-                className="relative cursor-pointer group"
-              >
-                <div
-                  className="absolute inset-0 blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-300"
-                  style={{ background: project.color }}
-                />
-
-                <div
-                  className="relative border-2 p-8 backdrop-blur-sm bg-[#0a0014]/50 group-hover:bg-[#0a0014]/70 transition-all duration-300"
-                  style={{
-                    borderColor: hoveredProject === i ? project.color : 'rgba(0, 240, 255, 0.3)',
-                    boxShadow: hoveredProject === i ? `0 0 30px ${project.color}` : 'none',
-                  }}
-                >
-                  {/* Corner brackets */}
-                  <div className="absolute top-0 left-0 w-6 h-6 border-t-4 border-l-4" style={{ borderColor: project.color }} />
-                  <div className="absolute top-0 right-0 w-6 h-6 border-t-4 border-r-4" style={{ borderColor: project.color }} />
-                  <div className="absolute bottom-0 left-0 w-6 h-6 border-b-4 border-l-4" style={{ borderColor: project.color }} />
-                  <div className="absolute bottom-0 right-0 w-6 h-6 border-b-4 border-r-4" style={{ borderColor: project.color }} />
-
-                  <div className="flex items-start justify-between mb-4">
-                    <div>
-                      <h3 className="text-2xl md:text-3xl font-bold mb-2" style={{ color: project.color }}>
-                        {project.title}
-                      </h3>
-                      <p className="text-white/60 tracking-wide">{project.subtitle}</p>
-                    </div>
-                    <motion.div
-                      className="px-3 py-1 border text-xs font-mono"
-                      style={{ borderColor: project.color, color: project.color }}
-                      animate={{
-                        opacity: [0.5, 1, 0.5],
-                      }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                    >
-                      {project.status}
-                    </motion.div>
-                  </div>
-
-                  {/* Animated progress bar */}
-                  <div className="mt-6 space-y-2">
-                    {[1, 2].map((bar) => (
-                      <motion.div
-                        key={bar}
-                        className="h-1"
-                        style={{
-                          background: `linear-gradient(90deg, ${project.color}, transparent)`,
-                          boxShadow: hoveredProject === i ? `0 0 10px ${project.color}` : 'none',
-                        }}
-                        animate={{
-                          width: hoveredProject === i ? '100%' : '60%',
-                          opacity: hoveredProject === i ? [0.5, 1, 0.5] : 0.3,
-                        }}
-                        transition={{
-                          width: { duration: 0.3 },
-                          opacity: { duration: 1.5, repeat: Infinity },
-                        }}
-                      />
-                    ))}
-                  </div>
-
-                  <p className="mt-6 text-sm text-white/40 group-hover:text-white/60 transition-colors">
-                    CLICK TO ACCESS FILE &gt;&gt;&gt;
-                  </p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+          <h2 className="text-3xl font-semibold mb-3 tracking-tight">Selected Work</h2>
+          <div className="w-16 h-[1px] bg-white/20" />
         </motion.div>
 
-        {/* Footer Status */}
+        <div className="space-y-1 max-w-6xl">
+          {projects.map((project, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.8 + i * 0.1, ease: [0.16, 1, 0.3, 1] }}
+              onMouseEnter={() => setSelectedProject(i)}
+              onMouseLeave={() => setSelectedProject(null)}
+              className="group relative"
+            >
+              {/* Project row */}
+              <div className="border-t border-white/5 hover:border-white/20 transition-all duration-700 py-8 cursor-pointer">
+                <div className="grid md:grid-cols-12 gap-8 items-start">
+                  {/* Title & Category */}
+                  <div className="md:col-span-5">
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span className="text-xs mono text-white/30">0{i + 1}</span>
+                      <h3 className="text-2xl md:text-3xl font-semibold tracking-tight group-hover:text-white/90 transition-colors duration-500">
+                        {project.title}
+                      </h3>
+                    </div>
+                    <div className="text-sm text-white/40 tracking-wide">{project.category} • {project.year}</div>
+                  </div>
+
+                  {/* Description */}
+                  <div className="md:col-span-4">
+                    <p className="text-white/50 leading-relaxed font-light">
+                      {project.description}
+                    </p>
+                  </div>
+
+                  {/* Tech & Impact */}
+                  <div className="md:col-span-3">
+                    <div className="mb-4">
+                      <div className="flex flex-wrap gap-2">
+                        {project.tech.map((tech) => (
+                          <span
+                            key={tech}
+                            className="text-xs mono text-white/40 border border-white/10 px-2 py-1"
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="text-sm text-white/60 italic">
+                      {project.impact}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Hover effect line */}
+              <motion.div
+                className="absolute bottom-0 left-0 h-[1px] bg-white/40"
+                initial={{ width: 0 }}
+                animate={{ width: selectedProject === i ? '100%' : 0 }}
+                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              />
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Footer Info */}
         <motion.div
           initial={{ opacity: 0 }}
-          animate={{ opacity: 0.4 }}
-          transition={{ delay: 1.5 }}
-          className="mt-20 text-center text-white/40 text-sm tracking-[0.2em] font-mono"
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 1.5 }}
+          className="mt-32 max-w-2xl"
         >
-          SYSTEM STATUS: ONLINE // NEURAL LINK STABLE // ACCESS LEVEL: AUTHORIZED
+          <div className="border-t border-white/10 pt-8">
+            <p className="text-white/40 text-sm leading-relaxed font-light">
+              Currently focused on neural network architectures for 3D perception.
+              Master's in AI/ML at TU Darmstadt. Previously built systems at scale.
+              Interested in the intersection of deep learning and geometric understanding.
+            </p>
+          </div>
         </motion.div>
       </div>
     </div>

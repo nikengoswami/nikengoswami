@@ -1,268 +1,213 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useState, useRef, useEffect } from 'react';
+import { useCyberpunk } from '@/contexts/InceptionContext';
 
-const travels = [
+const journeys = [
   {
-    title: "BERLIN CHRONICLES",
-    location: "GERMANY",
-    year: "2024",
-    description: "Urban exploration through the heart of European tech",
-    color: "var(--neon-yellow)",
+    location: "Berlin",
+    country: "Germany",
+    season: "Winter 2024",
+    story: "The Silicon Allee. Where history bleeds into innovation. Cold mornings in coworking spaces, the weight of the Berlin Wall still felt in every divided street. Tech founders build on top of Cold War scars.",
+    lesson: "Innovation is built on ruins",
+    color: "#60a5fa",
+    image: "🏛️",
   },
   {
-    title: "ALPINE EXPEDITION",
-    location: "SWITZERLAND",
-    year: "2023",
-    description: "High altitude adventures in the Swiss peaks",
-    color: "var(--neon-cyan)",
+    location: "Swiss Alps",
+    country: "Switzerland",
+    season: "Summer 2023",
+    story: "Three days above the clouds. No signal. No screens. Just peaks cutting through morning fog like razors through silk. The mountains don't care about your deadlines.",
+    lesson: "Silence teaches what noise never could",
+    color: "#a78bfa",
+    image: "⛰️",
   },
   {
-    title: "MEDITERRANEAN DRIFT",
-    location: "GREECE",
-    year: "2023",
-    description: "Island hopping through ancient civilizations",
-    color: "var(--neon-magenta)",
+    location: "Santorini",
+    country: "Greece",
+    season: "Autumn 2023",
+    story: "White buildings clinging to cliffs like hope. Worked from a cafe where Socrates' ideas still float in the salt air. Ancient philosophy meets fiber optic cables.",
+    lesson: "Some things should never be rushed",
+    color: "#f472b6",
+    image: "🌊",
   },
   {
-    title: "NORDIC LIGHTS",
-    location: "NORWAY",
-    year: "2024",
-    description: "Chasing auroras in the frozen north",
-    color: "var(--neon-green)",
+    location: "Lofoten",
+    country: "Norway",
+    season: "Spring 2024",
+    story: "Midnight sun and northern lights. Fjords so deep they swallow sound. Mountains so sharp they cut the sky. Stood there feeling microscopic. Stood there feeling infinite.",
+    lesson: "We are smaller and larger than we think",
+    color: "#34d399",
+    image: "🌌",
   },
 ];
 
 export default function NomadPath() {
-  const [hoveredTravel, setHoveredTravel] = useState<number | null>(null);
+  const { setPath } = useCyberpunk();
+  const [activeJourney, setActiveJourney] = useState<number | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start start', 'end end'],
+  });
+
+  const headerY = useTransform(scrollYProgress, [0, 0.2], [0, -150]);
+  const headerOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#0a0014] via-[#1a0033] to-[#0a0014] relative overflow-x-hidden">
-      {/* Cyberpunk grid background */}
-      <div className="fixed inset-0 cyber-grid" />
-      <div className="scan-lines fixed inset-0" />
-
-      {/* Wandering particles */}
-      {[...Array(40)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="fixed w-1 h-1 rounded-full bg-[var(--neon-yellow)]"
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-          }}
-          animate={{
-            x: [0, Math.random() * 200 - 100],
-            y: [0, Math.random() * 200 - 100],
-            opacity: [0.2, 0.6, 0.2],
-          }}
-          transition={{
-            duration: 10 + Math.random() * 10,
-            repeat: Infinity,
-            ease: 'linear',
-          }}
-        />
-      ))}
-
-      <div className="relative z-10 max-w-7xl mx-auto px-6 py-20">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-20"
-        >
-          <h1
-            className="text-7xl md:text-9xl font-black mb-4"
-            style={{
-              fontFamily: 'Orbitron',
-              color: 'var(--neon-yellow)',
-              textShadow: '0 0 20px var(--neon-yellow), 0 0 40px var(--neon-yellow)',
-            }}
-          >
-            NOMAD LOGS
-          </h1>
-          <div className="flex items-center justify-center gap-4 text-lg md:text-xl tracking-[0.3em] text-white/60">
-            <span className="w-12 h-[2px] bg-gradient-to-r from-transparent to-[var(--neon-yellow)]" />
-            <span>WANDERER // EXPLORER // FREE SPIRIT</span>
-            <span className="w-12 h-[2px] bg-gradient-to-l from-transparent to-[var(--neon-yellow)]" />
-          </div>
-        </motion.div>
-
-        {/* Journey Philosophy */}
-        <motion.div
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="mb-20 relative"
-        >
-          <div className="border-2 border-[var(--neon-yellow)] p-8 md:p-12 backdrop-blur-md bg-[#0a0014]/50">
-            <div className="absolute top-0 left-0 w-6 h-6 border-t-4 border-l-4 border-[var(--neon-yellow)]" />
-            <div className="absolute top-0 right-0 w-6 h-6 border-t-4 border-r-4 border-[var(--neon-yellow)]" />
-            <div className="absolute bottom-0 left-0 w-6 h-6 border-b-4 border-l-4 border-[var(--neon-yellow)]" />
-            <div className="absolute bottom-0 right-0 w-6 h-6 border-b-4 border-r-4 border-[var(--neon-yellow)]" />
-
-            <h2
-              className="text-4xl md:text-5xl font-bold mb-6"
-              style={{
-                background: 'linear-gradient(135deg, var(--neon-yellow), var(--neon-green))',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-              }}
-            >
-              THE WANDERER&apos;S CREED
-            </h2>
-            <p className="text-lg md:text-xl text-white/80 leading-relaxed font-light">
-              Life is not measured in destinations but in the roads traveled.
-              Every city is a new chapter, every mountain a new challenge, every stranger a potential friend.
-              The nomad&apos;s path is one of <span className="text-[var(--neon-yellow)]">perpetual discovery</span>,
-              where comfort zones are left behind and <span className="text-[var(--neon-green)]">experiences</span> become
-              the true currency of existence.
-            </p>
-          </div>
-        </motion.div>
-
-        {/* Travel Stories Grid */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-        >
-          <h2
-            className="text-4xl md:text-5xl font-bold mb-10 text-center"
-            style={{
-              background: 'linear-gradient(135deg, var(--neon-yellow), var(--neon-green), var(--neon-cyan))',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-            }}
-          >
-            JOURNEY ARCHIVES
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {travels.map((travel, i) => (
-              <motion.div
-                key={travel.title}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6, delay: 0.5 + i * 0.1 }}
-                onHoverStart={() => setHoveredTravel(i)}
-                onHoverEnd={() => setHoveredTravel(null)}
-                className="relative cursor-pointer group"
-              >
-                <div
-                  className="absolute inset-0 blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-300"
-                  style={{ background: travel.color }}
-                />
-
-                <div
-                  className="relative border-2 p-8 md:p-10 backdrop-blur-sm bg-[#0a0014]/50 group-hover:bg-[#0a0014]/70 transition-all duration-300 min-h-[300px] flex flex-col"
-                  style={{
-                    borderColor: hoveredTravel === i ? travel.color : 'rgba(255, 255, 0, 0.3)',
-                    boxShadow: hoveredTravel === i ? `0 0 30px ${travel.color}` : 'none',
-                  }}
-                >
-                  {/* Corner brackets */}
-                  <div className="absolute top-0 left-0 w-6 h-6 border-t-4 border-l-4" style={{ borderColor: travel.color }} />
-                  <div className="absolute top-0 right-0 w-6 h-6 border-t-4 border-r-4" style={{ borderColor: travel.color }} />
-                  <div className="absolute bottom-0 left-0 w-6 h-6 border-b-4 border-l-4" style={{ borderColor: travel.color }} />
-                  <div className="absolute bottom-0 right-0 w-6 h-6 border-b-4 border-r-4" style={{ borderColor: travel.color }} />
-
-                  <div className="flex-1">
-                    <div className="flex items-start justify-between mb-4">
-                      <motion.div
-                        className="px-3 py-1 border text-xs font-mono"
-                        style={{ borderColor: travel.color, color: travel.color }}
-                        animate={{
-                          opacity: [0.5, 1, 0.5],
-                        }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                      >
-                        {travel.year}
-                      </motion.div>
-                    </div>
-
-                    <h3 className="text-3xl md:text-4xl font-bold mb-3" style={{ color: travel.color }}>
-                      {travel.title}
-                    </h3>
-
-                    <p className="text-xl text-white/60 tracking-wider mb-4 font-light">
-                      {travel.location}
-                    </p>
-
-                    <p className="text-base text-white/70 leading-relaxed">
-                      {travel.description}
-                    </p>
-                  </div>
-
-                  {/* Journey status bars */}
-                  <div className="mt-6 space-y-2">
-                    {[1, 2, 3].map((bar) => (
-                      <motion.div
-                        key={bar}
-                        className="h-0.5"
-                        style={{
-                          background: `linear-gradient(90deg, ${travel.color}, transparent)`,
-                          boxShadow: hoveredTravel === i ? `0 0 8px ${travel.color}` : 'none',
-                        }}
-                        animate={{
-                          width: hoveredTravel === i ? '100%' : `${40 + bar * 20}%`,
-                          opacity: hoveredTravel === i ? [0.4, 0.8, 0.4] : 0.2,
-                        }}
-                        transition={{
-                          width: { duration: 0.4 },
-                          opacity: { duration: 1.5, repeat: Infinity, delay: bar * 0.2 },
-                        }}
-                      />
-                    ))}
-                  </div>
-
-                  <p className="mt-6 text-xs text-white/40 group-hover:text-white/60 transition-colors font-mono">
-                    &gt; FULL STORY COMING SOON...
-                  </p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Travel Stats */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.8 }}
-          className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-6"
-        >
-          {[
-            { label: 'COUNTRIES', value: '12+', color: 'var(--neon-yellow)' },
-            { label: 'CITIES', value: '50+', color: 'var(--neon-green)' },
-            { label: 'KILOMETERS', value: '25K+', color: 'var(--neon-cyan)' },
-            { label: 'ADVENTURES', value: '∞', color: 'var(--neon-magenta)' },
-          ].map((stat, i) => (
+    <div ref={containerRef} className="min-h-[300vh] bg-gradient-to-b from-slate-900 via-blue-950 to-purple-950 text-white relative overflow-hidden">
+      {/* Atmospheric particles - REDUCED TO 30 */}
+      <div className="fixed inset-0 pointer-events-none">
+        {[...Array(30)].map((_, i) => {
+          const size = 1 + Math.random() * 2;
+          return (
             <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 1 + i * 0.1 }}
-              className="border border-white/20 p-6 backdrop-blur-sm bg-[#0a0014]/30 text-center hover:border-[var(--neon-yellow)] transition-all duration-300"
-            >
-              <div className="text-4xl md:text-5xl font-black mb-2" style={{ color: stat.color }}>
-                {stat.value}
-              </div>
-              <div className="text-sm tracking-wider text-white/60">{stat.label}</div>
-            </motion.div>
-          ))}
-        </motion.div>
+              key={i}
+              className="absolute rounded-full bg-white/30"
+              style={{
+                width: size,
+                height: size,
+                left: `${i * 3.3}%`,
+                top: `${(i * 7) % 100}%`,
+              }}
+              animate={{
+                y: [0, -80, 0],
+                opacity: [0.1, 0.5, 0.1],
+              }}
+              transition={{
+                duration: 8 + (i % 5),
+                repeat: Infinity,
+                delay: i * 0.2,
+              }}
+            />
+          );
+        })}
+      </div>
 
-        {/* Footer */}
+      {/* Back button */}
+      <motion.button
+        onClick={() => setPath('entry')}
+        className="fixed top-8 left-8 z-50 px-5 py-2.5 border border-white/20 hover:border-white/40 bg-black/40 backdrop-blur-xl text-white/70 hover:text-white transition-all duration-300 text-sm tracking-wide"
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        whileHover={{ x: -3 }}
+      >
+        ← BACK
+      </motion.button>
+
+      {/* Hero Section */}
+      <motion.div
+        style={{ y: headerY, opacity: headerOpacity }}
+        className="sticky top-0 h-screen flex items-center justify-center px-8"
+      >
+        <div className="text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.3 }}
+          >
+            <div className="mb-6 text-xs tracking-[0.5em] text-blue-300/50 uppercase">
+              The Wanderer's Archive
+            </div>
+
+            <h1 className="text-9xl md:text-[200px] font-black mb-8 tracking-tighter leading-none bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 bg-clip-text text-transparent">
+              NOMAD
+            </h1>
+
+            <p className="text-2xl md:text-3xl text-blue-100/60 font-light max-w-3xl mx-auto">
+              Miles walked. Borders crossed. Patterns noticed in the spaces between destinations.
+            </p>
+
+            <motion.div
+              animate={{ y: [0, 10, 0] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="mt-16 text-white/30 text-xs"
+            >
+              SCROLL ↓
+            </motion.div>
+          </motion.div>
+        </div>
+      </motion.div>
+
+      {/* Journey Cards */}
+      <div className="relative z-10 px-8 md:px-16 space-y-32 pb-32">
+        {journeys.map((journey, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 80 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.8, delay: i * 0.1 }}
+            onMouseEnter={() => setActiveJourney(i)}
+            onMouseLeave={() => setActiveJourney(null)}
+            className="max-w-5xl mx-auto"
+          >
+            <motion.div
+              className="relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden"
+              whileHover={{ scale: 1.02, y: -10 }}
+              transition={{ duration: 0.4 }}
+            >
+              {/* Glow effect */}
+              <motion.div
+                className="absolute -inset-2 rounded-2xl blur-xl opacity-0"
+                style={{ backgroundColor: journey.color }}
+                animate={{ opacity: activeJourney === i ? 0.2 : 0 }}
+                transition={{ duration: 0.3 }}
+              />
+
+              {/* Top accent */}
+              <div className="h-1" style={{ backgroundColor: journey.color }} />
+
+              <div className="p-10 md:p-14">
+                {/* Header */}
+                <div className="flex items-start justify-between mb-6">
+                  <div>
+                    <div className="text-7xl mb-4">{journey.image}</div>
+                    <h2 className="text-6xl md:text-7xl font-black mb-2" style={{ color: journey.color }}>
+                      {journey.location}
+                    </h2>
+                    <div className="text-xl text-white/40">{journey.country}</div>
+                  </div>
+                  <div className="text-white/50 text-sm">{journey.season}</div>
+                </div>
+
+                {/* Story */}
+                <p className="text-2xl text-white/70 leading-relaxed font-light mb-8">
+                  {journey.story}
+                </p>
+
+                {/* Lesson */}
+                <div
+                  className="p-6 rounded-xl border border-white/10"
+                  style={{ backgroundColor: `${journey.color}10` }}
+                >
+                  <div className="text-xs text-white/40 uppercase tracking-wider mb-1">What I Learned</div>
+                  <p className="text-xl text-white/90 italic">{journey.lesson}</p>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Final section */}
+      <div className="relative z-10 px-8 py-32 text-center max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0 }}
-          animate={{ opacity: 0.4 }}
-          transition={{ delay: 1.5 }}
-          className="mt-20 text-center text-white/40 text-sm tracking-[0.2em] font-mono"
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1 }}
         >
-          NOMAD STATUS: WANDERING // GPS: EVERYWHERE // DESTINATION: UNKNOWN
+          <h3 className="text-5xl font-bold mb-8 bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-transparent">
+            The Journey Continues
+          </h3>
+          <p className="text-xl text-white/50 leading-relaxed">
+            This is the part that doesn't fit on a resume. The wandering, the wondering, the long train rides
+            and longer conversations with strangers. The reminder that we're students first, specialists second.
+          </p>
         </motion.div>
       </div>
     </div>

@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Niken Goswami | AI/ML Engineer & Full-Stack Developer",
-  description: "Master's student at TU Darmstadt specializing in AI/ML with hands-on experience in deep learning, point cloud processing, and software development.",
-  keywords: ["AI", "ML", "Deep Learning", "Computer Vision", "Full-Stack Developer", "Point Cloud", "3D Vision"],
+  title: "NIKEN GOSWAMI | CYBERPUNK PORTFOLIO",
+  description: "AI/ML Engineer & Deep Learning Specialist. Choose your path: NOMAD or CORPO. Master's at TU Darmstadt specializing in Neural Networks, Computer Vision & Point Cloud AI.",
+  keywords: ["AI", "ML", "Deep Learning", "Computer Vision", "Neural Networks", "Point Cloud", "3D Vision", "Cyberpunk"],
   authors: [{ name: "Niken Goswami" }],
   openGraph: {
-    title: "Niken Goswami | AI/ML Engineer",
-    description: "Turning 3D data into insights | Deep Learning Specialist",
+    title: "NIKEN GOSWAMI | CYBERPUNK PORTFOLIO",
+    description: "Choose your path: NOMAD (Travel) or CORPO (Professional). AI Engineer specializing in Deep Learning & Computer Vision.",
     type: "website",
   },
 };

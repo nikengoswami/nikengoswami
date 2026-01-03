@@ -1,7 +1,0 @@
-{
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "cd portfolio-website && npm run build",
-  "devCommand": "cd portfolio-website && npm run dev",
-  "installCommand": "cd portfolio-website && npm install",
-  "outputDirectory": "portfolio-website/.next"
-}

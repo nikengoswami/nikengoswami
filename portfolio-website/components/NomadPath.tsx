@@ -113,11 +113,11 @@ export default function NomadPath() {
               The Wanderer&apos;s Archive
             </div>
 
-            <h1 className="text-9xl md:text-[200px] font-black mb-8 tracking-tighter leading-none bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 bg-clip-text text-transparent">
+            <h1 className="text-7xl sm:text-8xl md:text-9xl lg:text-[200px] font-black mb-6 md:mb-8 tracking-tighter leading-none bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 bg-clip-text text-transparent px-4">
               NOMAD
             </h1>
 
-            <p className="text-2xl md:text-3xl text-blue-100/60 font-light max-w-3xl mx-auto">
+            <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-blue-100/60 font-light max-w-3xl mx-auto px-6">
               Miles walked. Borders crossed. Patterns noticed in the spaces between destinations.
             </p>
 
@@ -133,7 +133,7 @@ export default function NomadPath() {
       </motion.div>
 
       {/* Journey Cards */}
-      <div className="relative z-10 px-8 md:px-16 space-y-32 pb-32">
+      <div className="relative z-10 px-4 sm:px-6 md:px-8 lg:px-16 space-y-20 md:space-y-32 pb-20 md:pb-32">
         {journeys.map((journey, i) => (
           <motion.div
             key={i}
@@ -161,31 +161,31 @@ export default function NomadPath() {
               {/* Top accent */}
               <div className="h-1" style={{ backgroundColor: journey.color }} />
 
-              <div className="p-10 md:p-14">
+              <div className="p-6 sm:p-8 md:p-10 lg:p-14">
                 {/* Header */}
-                <div className="flex items-start justify-between mb-6">
+                <div className="flex flex-col sm:flex-row items-start justify-between mb-6 gap-4">
                   <div>
-                    <div className="text-7xl mb-4">{journey.image}</div>
-                    <h2 className="text-6xl md:text-7xl font-black mb-2" style={{ color: journey.color }}>
+                    <div className="text-5xl sm:text-6xl md:text-7xl mb-3 md:mb-4">{journey.image}</div>
+                    <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-2" style={{ color: journey.color }}>
                       {journey.location}
                     </h2>
-                    <div className="text-xl text-white/40">{journey.country}</div>
+                    <div className="text-lg md:text-xl text-white/40">{journey.country}</div>
                   </div>
                   <div className="text-white/50 text-sm">{journey.season}</div>
                 </div>
 
                 {/* Story */}
-                <p className="text-2xl text-white/70 leading-relaxed font-light mb-8">
+                <p className="text-lg sm:text-xl md:text-2xl text-white/70 leading-relaxed font-light mb-6 md:mb-8">
                   {journey.story}
                 </p>
 
                 {/* Lesson */}
                 <div
-                  className="p-6 rounded-xl border border-white/10"
+                  className="p-4 sm:p-5 md:p-6 rounded-xl border border-white/10"
                   style={{ backgroundColor: `${journey.color}10` }}
                 >
                   <div className="text-xs text-white/40 uppercase tracking-wider mb-1">What I Learned</div>
-                  <p className="text-xl text-white/90 italic">{journey.lesson}</p>
+                  <p className="text-base sm:text-lg md:text-xl text-white/90 italic">{journey.lesson}</p>
                 </div>
               </div>
             </motion.div>

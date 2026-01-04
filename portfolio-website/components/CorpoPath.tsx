@@ -94,10 +94,10 @@ export default function CorpoPath() {
           <div className="mb-4 text-sm tracking-[0.3em] text-white/30 uppercase">
             Technical Portfolio
           </div>
-          <h1 className="text-7xl md:text-8xl font-bold mb-8 tracking-tighter">
+          <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-6 md:mb-8 tracking-tighter px-4">
             CORPO
           </h1>
-          <p className="text-xl md:text-2xl text-white/50 max-w-3xl font-light leading-relaxed">
+          <p className="text-lg sm:text-xl md:text-2xl text-white/50 max-w-3xl font-light leading-relaxed px-6">
             Neural architectures. Point clouds. Systems that learn from data and scale under pressure.
           </p>
         </motion.div>
@@ -158,12 +158,12 @@ export default function CorpoPath() {
             >
               {/* Project row */}
               <div className="border-t border-white/5 hover:border-white/20 transition-all duration-700 py-8 cursor-pointer">
-                <div className="grid md:grid-cols-12 gap-8 items-start">
+                <div className="grid md:grid-cols-12 gap-6 md:gap-8 items-start">
                   {/* Title & Category */}
                   <div className="md:col-span-5">
-                    <div className="flex items-baseline gap-3 mb-2">
+                    <div className="flex items-baseline gap-2 md:gap-3 mb-2">
                       <span className="text-xs mono text-white/30">0{i + 1}</span>
-                      <h3 className="text-2xl md:text-3xl font-semibold tracking-tight group-hover:text-white/90 transition-colors duration-500">
+                      <h3 className="text-xl sm:text-2xl md:text-3xl font-semibold tracking-tight group-hover:text-white/90 transition-colors duration-500">
                         {project.title}
                       </h3>
                     </div>
@@ -172,14 +172,14 @@ export default function CorpoPath() {
 
                   {/* Description */}
                   <div className="md:col-span-4">
-                    <p className="text-white/50 leading-relaxed font-light">
+                    <p className="text-sm md:text-base text-white/50 leading-relaxed font-light">
                       {project.description}
                     </p>
                   </div>
 
                   {/* Tech & Impact */}
                   <div className="md:col-span-3">
-                    <div className="mb-4">
+                    <div className="mb-3 md:mb-4">
                       <div className="flex flex-wrap gap-2">
                         {project.tech.map((tech) => (
                           <span

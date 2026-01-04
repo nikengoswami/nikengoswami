@@ -37,12 +37,13 @@ export default function DualThemeEntry({ onSelectPath }: DualThemeEntryProps) {
   };
 
   return (
-    <div className="fixed inset-0 flex">
-      {/* NOMAD - Left Side - Warm, Adventurous, Organic */}
+    <div className="fixed inset-0 flex flex-col md:flex-row">
+      {/* NOMAD - Left Side (Top on mobile) - Warm, Adventurous, Organic */}
       <motion.div
         className="relative cursor-pointer overflow-hidden"
         animate={{
           width: hoveredSide === 'nomad' ? '65%' : hoveredSide === 'corpo' ? '35%' : '50%',
+          height: hoveredSide === 'nomad' ? '65%' : hoveredSide === 'corpo' ? '35%' : '50%',
         }}
         transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
         onClick={() => onSelectPath('nomad')}
@@ -73,18 +74,18 @@ export default function DualThemeEntry({ onSelectPath }: DualThemeEntryProps) {
 
         {/* Floating compass */}
         <motion.div
-          className="absolute top-20 right-20"
+          className="absolute top-10 right-10 md:top-20 md:right-20"
           animate={{ rotate: 360 }}
           transition={{ duration: 60, repeat: Infinity, ease: 'linear' }}
         >
-          <div className="w-32 h-32 rounded-full border-4 border-amber-600/40 flex items-center justify-center relative">
-            <div className="text-6xl">🧭</div>
-            <div className="absolute -top-8 text-amber-400/60 text-xs">N</div>
+          <div className="w-20 h-20 md:w-32 md:h-32 rounded-full border-2 md:border-4 border-amber-600/40 flex items-center justify-center relative">
+            <div className="text-4xl md:text-6xl">🧭</div>
+            <div className="absolute -top-6 md:-top-8 text-amber-400/60 text-xs">N</div>
           </div>
         </motion.div>
 
         {/* Content */}
-        <div className="relative h-full flex flex-col items-center justify-center px-12 text-center">
+        <div className="relative h-full flex flex-col items-center justify-center px-6 md:px-12 text-center">
           <motion.div
             animate={{
               scale: hoveredSide === 'nomad' ? 1.05 : 1,
@@ -93,7 +94,7 @@ export default function DualThemeEntry({ onSelectPath }: DualThemeEntryProps) {
             transition={{ duration: 0.5 }}
           >
             <motion.h2
-              className="text-8xl font-black mb-6 tracking-tight text-amber-50"
+              className="text-5xl md:text-8xl font-black mb-4 md:mb-6 tracking-tight text-amber-50"
               style={{
                 textShadow: '0 4px 20px rgba(217, 119, 6, 0.5)',
                 fontFamily: 'Space Grotesk, sans-serif'
@@ -101,12 +102,12 @@ export default function DualThemeEntry({ onSelectPath }: DualThemeEntryProps) {
             >
               NOMAD
             </motion.h2>
-            <p className="text-2xl text-amber-100/70 font-light mb-8 max-w-md leading-relaxed italic">
+            <p className="text-base md:text-2xl text-amber-100/70 font-light mb-6 md:mb-8 max-w-md leading-relaxed italic px-4">
               The Wanderer. Explorer of uncharted territories. Seeker of stories hidden in distant lands.
             </p>
 
             {/* Adventure icons */}
-            <div className="flex gap-6 text-4xl justify-center opacity-70">
+            <div className="flex gap-4 md:gap-6 text-3xl md:text-4xl justify-center opacity-70">
               <motion.span animate={{ y: [0, -10, 0] }} transition={{ duration: 2, repeat: Infinity, delay: 0 }}>⛰️</motion.span>
               <motion.span animate={{ y: [0, -10, 0] }} transition={{ duration: 2, repeat: Infinity, delay: 0.3 }}>🌊</motion.span>
               <motion.span animate={{ y: [0, -10, 0] }} transition={{ duration: 2, repeat: Infinity, delay: 0.6 }}>🌌</motion.span>
@@ -147,11 +148,12 @@ export default function DualThemeEntry({ onSelectPath }: DualThemeEntryProps) {
         </motion.div>
       </motion.div>
 
-      {/* CORPO - Right Side - Cold, Technical, Minimal */}
+      {/* CORPO - Right Side (Bottom on mobile) - Cold, Technical, Minimal */}
       <motion.div
         className="relative cursor-pointer overflow-hidden"
         animate={{
           width: hoveredSide === 'corpo' ? '65%' : hoveredSide === 'nomad' ? '35%' : '50%',
+          height: hoveredSide === 'corpo' ? '65%' : hoveredSide === 'nomad' ? '35%' : '50%',
         }}
         transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
         onClick={() => onSelectPath('corpo')}
@@ -197,7 +199,7 @@ export default function DualThemeEntry({ onSelectPath }: DualThemeEntryProps) {
         ))}
 
         {/* Content */}
-        <div className="relative h-full flex flex-col items-center justify-center px-12 text-center">
+        <div className="relative h-full flex flex-col items-center justify-center px-6 md:px-12 text-center">
           <motion.div
             animate={{
               scale: hoveredSide === 'corpo' ? 1.05 : 1,
@@ -206,19 +208,19 @@ export default function DualThemeEntry({ onSelectPath }: DualThemeEntryProps) {
             transition={{ duration: 0.5 }}
           >
             <motion.h2
-              className="text-8xl font-black mb-6 tracking-tighter text-white"
+              className="text-5xl md:text-8xl font-black mb-4 md:mb-6 tracking-tighter text-white"
               style={{
                 fontFamily: 'Space Grotesk, sans-serif'
               }}
             >
               CORPO
             </motion.h2>
-            <p className="text-2xl text-white/50 font-light mb-8 max-w-md leading-relaxed">
+            <p className="text-base md:text-2xl text-white/50 font-light mb-6 md:mb-8 max-w-md leading-relaxed px-4">
               The Builder. Neural architectures. Point clouds. Systems that scale.
             </p>
 
             {/* Tech indicators */}
-            <div className="flex gap-4 justify-center mono text-white/30 text-xs">
+            <div className="flex gap-3 md:gap-4 justify-center mono text-white/30 text-xs">
               <motion.div animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 2, repeat: Infinity }}>
                 [AI]
               </motion.div>
